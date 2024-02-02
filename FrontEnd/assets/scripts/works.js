@@ -1,29 +1,47 @@
-export async function displayWorks(works) {
-
-    console.log(works);
-
-    const galleryDiv = document.querySelector('.gallery')
-
-    for (const item of works) {
-        // Créer des éléments HTML
-        const figure = document.createElement('figure');
-        const img = document.createElement('img');
-        const figcaption = document.createElement('figcaption');
-        
-        if (item.categoryId === 1) {
-          // Définir les attributs et le contenu des éléments
-          img.src = item.imageUrl; 
-          img.alt = item.title; 
-          figcaption.textContent = item.title; 
-
-          // Ajouter les éléments à la div avec la classe "gallery"
-          figure.appendChild(img);
-          figure.appendChild(figcaption);
-          galleryDiv.appendChild(figure);
-        }  
-        
+export async function categoryFilter(categories) { 
+  const form = document.querySelector(".all-buttons");
+  const buttonAll = document.createElement("button");
   
-        
- 
-      } 
-    }
+  buttonAll.className = 'filter';
+  buttonAll.textContent = 'Tous';
+  buttonAll.type = 'button';
+
+  form.appendChild(buttonAll);
+
+  for(const category of categories) {
+      const button = document.createElement('button')
+      button.textContent = category.name;
+      button.id = category.id;
+      button.className = 'filter';
+      button.type = 'button';
+      form.appendChild(button); 
+
+      button.addEventListener('click', () => {
+          const id = button.id;
+          console.log(id);
+
+          const imgGallery = document.querySelectorAll(".gallery img");
+          for(const img of imgGallery) {
+              const imgCategoryId = img.getAttribute("category");
+              if (imgCategoryId === id) {
+                  img.parentElement.style.display = 'block';
+              } else {
+                  img.parentElement.style.display = 'none';
+              }
+              
+              
+              console.log(category);
+          }
+      });
+
+      buttonAll.addEventListener('click', () => {
+          const imgGallery = document.querySelectorAll(".gallery img");
+          for(const img of imgGallery) {
+              img.parentElement.style.display = 'block';
+          }
+      });
+  }
+
+
+
+}
