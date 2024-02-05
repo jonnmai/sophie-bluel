@@ -1,5 +1,7 @@
 const form = document.getElementById("login");
 
+
+
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -22,15 +24,21 @@ form.addEventListener("submit", (e) => {
     })
     
     .then(response => response.json())
-  .then(data => {
-    // Traiter la réponse de l'API
-    console.log(data);
-    // Vous pouvez rediriger l'utilisateur ou effectuer d'autres actions en fonction de la réponse
-    // window.location.href = "/FrontEnd/index.html";
-  })
-  .catch(error => {
-    console.error("Erreur lors de la requête POST:", error);
-    // Gérer les erreurs de la requête
-  });
+    .then(data => {
+        // Traiter la réponse de l'API
+        console.log(data);
+
+        window.localStorage.setItem("token",data.token);
+        window.localStorage.setItem("userId",data.userId)
+
+        console.log(window.localStorage.getItem("token"));
+        // Vous pouvez rediriger l'utilisateur ou effectuer d'autres actions en fonction de la réponse
+        // window.location.href = "/FrontEnd/index.html";
+    })
+    .catch(error => {
+        console.error("Erreur lors de la requête POST:", error);
+        // Gérer les erreurs de la requête
+    });
 
 });
+

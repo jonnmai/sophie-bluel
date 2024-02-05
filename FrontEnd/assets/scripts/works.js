@@ -45,3 +45,27 @@ export async function categoryFilter(categories) {
 
 
 }
+
+//On prend le 3eme element de notre navbar pour le modifier en "logout" par la suite
+const loginToLogout = document.querySelector("nav ul li:nth-child(3) a");
+
+export async function verifyLogin() {
+    const token = window.localStorage.getItem("token");
+    const userId = window.localStorage.getItem("userId");
+
+    if (token && userId) {
+        const project = document.getElementById("title-h2");
+        const modifyBtn = document.createElement("p");
+        const i = document.createElement("i");
+        modifyBtn.innerText = "Modifier";
+        modifyBtn.classList.add("modify-button");
+        i.classList.add("fa-solid", "fa-pen-to-square");
+        project.insertAdjacentElement('afterend', modifyBtn);
+        modifyBtn.insertAdjacentElement('afterbegin', i);
+        
+        
+        loginToLogout.textContent = "logout";
+        
+        
+    }
+}

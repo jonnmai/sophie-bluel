@@ -1,5 +1,5 @@
 
-import { categoryFilter } from "./works.js";
+import { categoryFilter, verifyLogin } from "./works.js";
 //Variable qui nous permettra de filtrer l'affichage des projets//
 
 
@@ -10,7 +10,7 @@ const works = await worksRequest.json();
 const categories = await jsonCategories.json();
 
 categoryFilter(categories);
-
+verifyLogin();
 
 const galleryDiv = document.querySelector('.gallery')
 const elementSet = new Set();
