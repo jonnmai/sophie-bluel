@@ -1,5 +1,7 @@
-const form = document.getElementById("login");
+window.localStorage.clear();
 
+const form = document.getElementById("login");
+const errorMsg = document.getElementById("error-msg");
 
 
 form.addEventListener("submit", (e) => {
@@ -28,12 +30,18 @@ form.addEventListener("submit", (e) => {
         // Traiter la réponse de l'API
         console.log(data);
 
-        window.localStorage.setItem("token",data.token);
-        window.localStorage.setItem("userId",data.userId)
+        if(data.token && data.userId) {
+            window.localStorage.setItem("token",data.token);
+            window.localStorage.setItem("userId",data.userId)
 
-        console.log(window.localStorage.getItem("token"));
-        // Vous pouvez rediriger l'utilisateur ou effectuer d'autres actions en fonction de la réponse
-        window.location.href = "/FrontEnd/index.html";
+            console.log(window.localStorage.getItem("token"));
+            // Vous pouvez rediriger l'utilisateur ou effectuer d'autres actions en fonction de la réponse
+            window.location.href = "/FrontEnd/index.html";  
+        }else {
+            errorMsg.textContent = "Identifiant où mot de passe incorrect";
+            console.error("Erreur: Le token n'est pas présent dans la réponse de l'API");
+        }
+        
     })
     .catch(error => {
         console.error("Erreur lors de la requête POST:", error);

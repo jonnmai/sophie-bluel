@@ -61,7 +61,7 @@ const userId = window.localStorage.getItem("userId");
 //fonctions inaccessiblent déconnecter
 export function verifyLogin() {
 
-    if (token && userId) {
+    if (token != null && userId != null) {
         const header = document.getElementById("headerBis");
         const headerBis = document.createElement("div");
         const project = document.getElementById("title-h2");
@@ -98,24 +98,23 @@ export function verifyLogin() {
 }
 
 export function logoutFunction() {
-    if (token && userId) {
+    if (token != null && userId != null) {
         const retrieveLogout = document.getElementById("logout");
 
         retrieveLogout.addEventListener('click', () => {
-            
-                window.localStorage.removeItem("token");
-                window.localStorage.removeItem("userId");
+                window.localStorage.clear();
                 window.location.reload();
         });
     }
 }
 
 export function modalOpener() {
-    if (token && userId) {
+    if (token != null && userId != null) {
         const modifyBtn = document.getElementById("modify-button");
 
         modifyBtn.addEventListener('click', ()=> {
             console.log(token);
+            console.log(userId)
             console.log(modifyBtn);
         });
     }
