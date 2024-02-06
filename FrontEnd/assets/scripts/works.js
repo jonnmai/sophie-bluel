@@ -1,6 +1,8 @@
+const form = document.querySelector(".all-buttons");
+const buttonAll = document.createElement("button");
+
 export async function categoryFilter(categories) { 
-  const form = document.querySelector(".all-buttons");
-  const buttonAll = document.createElement("button");
+
   
   buttonAll.className = 'filter';
   buttonAll.textContent = 'Tous';
@@ -47,25 +49,75 @@ export async function categoryFilter(categories) {
 }
 
 //On prend le 3eme element de notre navbar pour le modifier en "logout" par la suite
-const loginToLogout = document.querySelector("nav ul li:nth-child(3) a");
+const login = document.querySelector("nav ul li:nth-child(3) a");
+const parentLogin = login.parentElement;
+const logout = document.createElement("a");
 
-export async function verifyLogin() {
-    const token = window.localStorage.getItem("token");
-    const userId = window.localStorage.getItem("userId");
+//On stock le token et l'id récuperer grâce à l'API
+const token = window.localStorage.getItem("token");
+const userId = window.localStorage.getItem("userId");
+
+//Vérifie que l'on est connecté grâce au token et userId pour afficher les 
+//fonctions inaccessiblent déconnecter
+export function verifyLogin() {
 
     if (token && userId) {
+        const header = document.getElementById("headerBis");
+        const headerBis = document.createElement("div");
         const project = document.getElementById("title-h2");
+        const tempoMargin = document.getElementById("project");
         const modifyBtn = document.createElement("p");
         const i = document.createElement("i");
+        let iCopy = '';
+
+        headerBis.classList.add("headerBis");
+        headerBis.innerText= "Mode édition";
+        header.appendChild(headerBis);
+
+
+
         modifyBtn.innerText = "Modifier";
+        modifyBtn.setAttribute('id',"modify-button");
         modifyBtn.classList.add("modify-button");
         i.classList.add("fa-solid", "fa-pen-to-square");
         project.insertAdjacentElement('afterend', modifyBtn);
         modifyBtn.insertAdjacentElement('afterbegin', i);
+        iCopy = i.cloneNode(true);
+        headerBis.insertAdjacentElement('afterbegin', iCopy);
+
         
-        
-        loginToLogout.textContent = "logout";
-        
+        logout.href = "#";
+        logout.textContent = "logout";
+        logout.setAttribute('id', "logout");
+        parentLogin.replaceChild(logout, login);
+
+        form.style = "display: none";
+        tempoMargin.style = "margin-bottom: 100px";
         
     }
 }
+
+export function logoutFunction() {
+    if (token && userId) {
+        const retrieveLogout = document.getElementById("logout");
+
+        retrieveLogout.addEventListener('click', () => {
+            
+                window.localStorage.removeItem("token");
+                window.localStorage.removeItem("userId");
+                window.location.reload();
+        });
+    }
+}
+
+export function modalOpener() {
+    if (token && userId) {
+        const modifyBtn = document.getElementById("modify-button");
+
+        modifyBtn.addEventListener('click', ()=> {
+            console.log(token);
+            console.log(modifyBtn);
+        });
+    }
+}
+

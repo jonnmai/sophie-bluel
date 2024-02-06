@@ -33,7 +33,7 @@ form.addEventListener("submit", (e) => {
 
         console.log(window.localStorage.getItem("token"));
         // Vous pouvez rediriger l'utilisateur ou effectuer d'autres actions en fonction de la réponse
-        // window.location.href = "/FrontEnd/index.html";
+        window.location.href = "/FrontEnd/index.html";
     })
     .catch(error => {
         console.error("Erreur lors de la requête POST:", error);

@@ -1,5 +1,5 @@
 
-import { categoryFilter, verifyLogin } from "./works.js";
+import { categoryFilter, verifyLogin, modalOpener, logoutFunction } from "./works.js";
 //Variable qui nous permettra de filtrer l'affichage des projets//
 
 
@@ -11,6 +11,8 @@ const categories = await jsonCategories.json();
 
 categoryFilter(categories);
 verifyLogin();
+logoutFunction();
+modalOpener();
 
 const galleryDiv = document.querySelector('.gallery')
 const elementSet = new Set();
@@ -57,6 +59,7 @@ buttons.forEach((button) => {
         console.log("test");
     });
 });
+
 
 
 
