@@ -1,11 +1,11 @@
-window.localStorage.clear();
+window.localStorage.clear(); //clear le storage 
 
 const form = document.getElementById("login");
 const errorMsg = document.getElementById("error-msg");
 
 
 form.addEventListener("submit", (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Empêche le comportement submit de base de se déclencher (reload)
 
     const username = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -35,7 +35,7 @@ form.addEventListener("submit", (e) => {
             window.localStorage.setItem("userId",data.userId)
 
             console.log(window.localStorage.getItem("token"));
-            // Vous pouvez rediriger l'utilisateur ou effectuer d'autres actions en fonction de la réponse
+            // redirection de l'utilisateur
             window.location.href = "/FrontEnd/index.html";  
         }else {
             errorMsg.textContent = "Identifiant où mot de passe incorrect";

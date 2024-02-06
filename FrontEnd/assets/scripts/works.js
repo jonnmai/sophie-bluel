@@ -2,8 +2,6 @@ const form = document.querySelector(".all-buttons");
 const buttonAll = document.createElement("button");
 
 export async function categoryFilter(categories) { 
-
-  
   buttonAll.className = 'filter';
   buttonAll.textContent = 'Tous';
   buttonAll.type = 'button';
@@ -18,10 +16,9 @@ export async function categoryFilter(categories) {
       button.type = 'button';
       form.appendChild(button); 
 
+    //Filtre les images grâce à l'id des catégories récuperer
       button.addEventListener('click', () => {
           const id = button.id;
-          console.log(id);
-
           const imgGallery = document.querySelectorAll(".gallery img");
           for(const img of imgGallery) {
               const imgCategoryId = img.getAttribute("category");
@@ -30,9 +27,6 @@ export async function categoryFilter(categories) {
               } else {
                   img.parentElement.style.display = 'none';
               }
-              
-              
-              console.log(category);
           }
       });
 
@@ -82,7 +76,7 @@ export function verifyLogin() {
         i.classList.add("fa-solid", "fa-pen-to-square");
         project.insertAdjacentElement('afterend', modifyBtn);
         modifyBtn.insertAdjacentElement('afterbegin', i);
-        iCopy = i.cloneNode(true);
+        iCopy = i.cloneNode(true); //Copie les attributs de la constante 'i' dans "iCopy" car 'i' ne peut être attribuer qu'à un seul élément
         headerBis.insertAdjacentElement('afterbegin', iCopy);
 
         
@@ -100,7 +94,7 @@ export function verifyLogin() {
 export function logoutFunction() {
     if (token != null && userId != null) {
         const retrieveLogout = document.getElementById("logout");
-
+        // On clear le localStorage ce qui revient à se déconnecter car le token n'est plus stocker
         retrieveLogout.addEventListener('click', () => {
                 window.localStorage.clear();
                 window.location.reload();
@@ -118,5 +112,44 @@ export function modalOpener() {
             console.log(modifyBtn);
         });
     }
+}
+
+export function filterChecked() {
+    // Pour avoir le filtre choisi "Checked"
+const buttons = document.querySelectorAll(".filter");
+
+buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+        // Réinitialiser la classe 'active' sur tous les boutons
+        buttons.forEach((btn) => {
+            btn.classList.remove('active');
+        });
+        // Ajouter la classe 'active' au bouton actuel
+        button.classList.add('active');
+    });
+});
+
+}
+
+export async function displayGallery(works) {
+    // On récupère toute la div "Gallery"
+    const galleryDiv = document.querySelector('.gallery')
+for (const item of works) {
+    // Créer des éléments HTML pour chaque item
+    const figure = document.createElement('figure');
+    const img = document.createElement('img');
+    const figcaption = document.createElement('figcaption');
+
+      // Définir les attributs et le contenu des éléments
+      img.setAttribute('src', item.imageUrl); 
+      img.setAttribute('alt',item.title); 
+      img.setAttribute('category', item.categoryId);
+      figcaption.textContent = item.title; 
+
+      // Ajouter les éléments à la div avec la classe "gallery"
+      figure.appendChild(img);
+      figure.appendChild(figcaption);
+      galleryDiv.appendChild(figure);
+  }
 }
 
