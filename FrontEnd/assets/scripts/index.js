@@ -1,10 +1,13 @@
 
 import { categoryFilter,
-         verifyLogin,
-         modalOpener, 
+         verifyLogin, 
          logoutFunction, 
          filterChecked,
           displayGallery } from "./works.js";
+
+import { modalCreator,
+         openModal } from "./modal.js";
+
 //Variables qui nous permettra de filtrer l'affichage des projets//
 const worksRequest = await fetch("http://localhost:5678/api/works");
 const jsonCategories = await fetch("http://localhost:5678/api/categories");
@@ -18,8 +21,8 @@ filterChecked();
 
 verifyLogin();
 logoutFunction();
-
-modalOpener();
+modalCreator();
+openModal();
 
 
 

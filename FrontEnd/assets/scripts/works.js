@@ -102,17 +102,7 @@ export function logoutFunction() {
     }
 }
 
-export function modalOpener() {
-    if (token != null && userId != null) {
-        const modifyBtn = document.getElementById("modify-button");
 
-        modifyBtn.addEventListener('click', ()=> {
-            console.log(token);
-            console.log(userId)
-            console.log(modifyBtn);
-        });
-    }
-}
 
 export function filterChecked() {
     // Pour avoir le filtre choisi "Checked"
@@ -133,7 +123,7 @@ buttons.forEach((button) => {
 
 export async function displayGallery(works) {
     // On récupère toute la div "Gallery"
-    const galleryDiv = document.querySelector('.gallery')
+    const galleryDiv = document.querySelector('.gallery');
 for (const item of works) {
     // Créer des éléments HTML pour chaque item
     const figure = document.createElement('figure');
