@@ -6,7 +6,9 @@ import { categoryFilter,
           displayGallery } from "./works.js";
 
 import { modalCreator,
-         openModal } from "./modal.js";
+         openModal,
+         addOption,
+         submitNewElement } from "./modal.js";
 
 //Variables qui nous permettra de filtrer l'affichage des projets//
 const worksRequest = await fetch("http://localhost:5678/api/works");
@@ -22,7 +24,10 @@ filterChecked();
 verifyLogin();
 logoutFunction();
 modalCreator();
+addOption(categories);
 openModal();
+
+submitNewElement()
 
 
 
