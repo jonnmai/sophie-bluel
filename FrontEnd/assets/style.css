@@ -359,11 +359,19 @@ width: 210px;
 }
 
 .cross {
-	align-self: flex-end;
+	display: flex;
+	width: 100%;
+	justify-content: flex-end;
+	
+}
+
+.fa-arrow-left {
+	font-size: 32px;
 }
 
 .fa-xmark {	
 	font-size: 25px;
+	
 }
 
 .modal-title {
@@ -414,4 +422,9 @@ width: 210px;
 	height: 45px;
 	font-size: 19px;
 	border: none;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
 }
