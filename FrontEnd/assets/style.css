@@ -394,13 +394,15 @@ width: 210px;
 }
 
 .modal-img {
+	
 	width: 20%;
 	box-sizing: border-box;
+	position: relative;
+    display: inline-block;
 }
 
 .modal-img img {
-	
-	max-width: fit-content;
+	max-width: 120px;
 	height: 150px;
 }
 
@@ -431,4 +433,22 @@ width: 210px;
 
 input:disabled {
 	background: #A7A7A7;
+}
+
+.trash {
+    position: absolute;
+    top: 5px; /* Ajustez selon vos besoins */
+    right: 15px; /* Ajustez selon vos besoins */
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 4px;
+    cursor: pointer;
+	border-radius: 2px;
+}
+
+.trash i {
+    color: #FFF;
+}
+
+.trash i:hover {
+	color: #ff0000;
 }

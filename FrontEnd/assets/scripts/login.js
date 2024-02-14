@@ -36,7 +36,7 @@ form.addEventListener("submit", (e) => {
 
             console.log(window.localStorage.getItem("token"));
             // redirection de l'utilisateur
-            window.location.href = "/FrontEnd/index.html";  
+            window.location.href = "index.html";  
         }else {
             errorMsg.textContent = "Identifiant où mot de passe incorrect";
             console.error("Erreur: Le token n'est pas présent dans la réponse de l'API");

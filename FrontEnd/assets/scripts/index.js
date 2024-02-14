@@ -8,7 +8,8 @@ import { categoryFilter,
 import { modalCreator,
          openModal,
          addOption,
-         submitNewElement } from "./modal.js";
+         submitNewElement,
+         deletePicture } from "./modal.js";
 
 //Variables qui nous permettra de filtrer l'affichage des projets//
 const worksRequest = await fetch("http://localhost:5678/api/works");
@@ -27,7 +28,8 @@ modalCreator();
 addOption(categories);
 openModal();
 
-submitNewElement()
+submitNewElement();
+
 
 
 

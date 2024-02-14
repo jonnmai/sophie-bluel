@@ -36,7 +36,7 @@ export function modalCreator() {
     </div>
         <h3 class="modal-title">Galerie photo</h3>
         
-    <form id="modal-pic-form" style="display: block;" method="post">
+    <form id="modal-pic-form" style="display: block;">
         <div class="form">
             <input type="file" name="file" id="file">
             <label for="text">Titre</label>
@@ -45,7 +45,7 @@ export function modalCreator() {
             <select name="category" id="category">
             </select>
             <div class="line"></div>
-            <input id="modal-pic" type="submit" value="Valider" disabled>
+            <button id="modal-pic" type="submit" disabled>Valider</button>
             
         </div>
     </form>
@@ -69,9 +69,11 @@ export function openModal() {
     openModal.addEventListener('click', ()=> {
         modal.showModal();
         displayModalGallery(works);
+        deletePicture();
     });
 
-    openSecondModal.addEventListener('click', ()=> {
+    openSecondModal.addEventListener('click', (e)=> {
+        e.preventDefault()
        secondModal.showModal(); 
        modal.close();
     });
@@ -111,16 +113,30 @@ for (const item of works) {
     const figure = document.createElement('figure');
     const img = document.createElement('img');
 
+    const trash = document.createElement('span');
+    const trashIcon = document.createElement('i');
+    
+
       // Définir les attributs et le contenu des éléments
       img.setAttribute('src', item.imageUrl); 
       img.setAttribute('alt',item.title); 
       img.setAttribute('category', item.categoryId);
+      img.id = item.id;
       figure.setAttribute('class', "modal-img");
+      figure.id = item.id;
 
       // Ajouter les éléments à la div avec la classe "gallery"
       figure.appendChild(img);
       galleryDiv.appendChild(figure);
+
+      trash.setAttribute('id', item.id);
+      trash.setAttribute('class', "trash");
+      trashIcon.setAttribute('class', "fa-solid fa-trash-can");
+      
+      trash.appendChild(trashIcon);
+      figure.appendChild(trash);
   }
+
 }
 
 function clearModalGallery() {
@@ -146,7 +162,7 @@ export async function addOption(categories) {
     }
 }
 
-export async function submitNewElement() {
+export function submitNewElement() {
     const fileInput = document.getElementById("file");
     const textInput = document.getElementById("text");
     const categorySelect = document.getElementById("category");
@@ -168,33 +184,147 @@ export async function submitNewElement() {
         addPicBtn.disabled = !areFieldsFilled;
     }
 
-    secondModal.addEventListener('submit', (e) => {
-        e.preventDefault();
+    modalPicForm.addEventListener('submit', (event) => {
+        event.preventDefault(); // Empêcher la soumission du formulaire par défaut
         console.log("Success");
         const formData = new FormData();
-
+    
         formData.append("image", fileInput.files[0]);
         formData.append("title", textInput.value);
         formData.append("category", categorySelect.value);
-
+    
         fetch("http://localhost:5678/api/works", {
             method: "POST",
             body: formData,
             headers: {
                 'Authorization': `Bearer ${token}`
             }
+            
         })
         .then(response => response.json())
         .then(data => {
-            // Traiter la réponse de l'API
-            console.log(data);
+
+             // Traiter la réponse de l'API
+             console.log(data);
+             addPicToModalAndGallery(data);
+             deletePicture();
+
             // window.location.href = "/FrontEnd/index.html";  
+            
         })
         .catch(error => {
             console.error("Erreur lors de la requête POST:", error);
             // Gérer les erreurs de la requête
         });
-
     });
+    
 }
 
+function addPicToModalAndGallery(data) {
+    if (data.imageUrl && data.title) {
+        // Créer un élément d'image
+        const imgModal = document.createElement('img');
+        const imgGallery = document.createElement('img');
+        // Définir l'attribut src avec l'URL de l'image renvoyée par l'API
+        imgModal.src = data.imageUrl;
+        imgModal.id = data.id;
+        imgGallery.src = data.imageUrl;
+        imgGallery.id = data.id;
+
+        // Ajouter l'élément d'image à l'endroit souhaité dans votre DOM
+        const modalGallery = document.querySelector('.modal-gallery');
+        const gallery = document.querySelector('.gallery');
+
+        const modalFigure = document.createElement('figure');
+        const figure = document.createElement('figure');
+        const figcaption = document.createElement('figcaption');
+
+        const trash = document.createElement('span');
+        const trashIcon = document.createElement('i');
+
+        modalFigure.setAttribute('class', "modal-img");
+        modalFigure.id = data.id;
+        modalFigure.id = data.id;
+        modalFigure.appendChild(imgModal);
+        modalGallery.appendChild(modalFigure);
+        
+
+        
+        imgGallery.setAttribute('alt',data.title); 
+        imgGallery.setAttribute('category', data.categoryId);
+        figure.id = data.id;
+        figcaption.textContent = data.title; 
+        figure.appendChild(imgGallery);
+        figure.appendChild(figcaption);
+        gallery.appendChild(figure);
+
+
+
+        trash.setAttribute('id', data.id);
+        trash.setAttribute('class', "trash");
+        trashIcon.setAttribute('class', "fa-solid fa-trash-can");
+
+        trash.appendChild(trashIcon);
+        modalFigure.appendChild(trash);
+
+        
+
+    } else {
+        console.error("L'API n'a pas renvoyé l'URL de l'image attendue.");
+    }
+}
+
+export function deletePicture() {
+    // Sélectionnez tous les éléments avec la classe "trash"
+const trashIcons = document.querySelectorAll('.trash');
+console.log(trashIcons)
+// Parcourez la NodeList pour accéder à chaque élément
+for (const trashIcon of trashIcons) {
+    // Accédez à chaque élément "trash" ici
+    console.log(trashIcon);
+    
+    // Vous pouvez également accéder à l'ID associé à chaque élément
+    const imageId = trashIcon.id;
+    console.log("ID de l'image associée :", imageId);
+    
+    // Ajoutez un gestionnaire d'événements à chaque icône trashcan
+    trashIcon.addEventListener('click', () => {
+        // Récupérez l'ID associé à cette icône
+        console.log("Image ID à supprimer :", imageId);
+
+        fetch(`http://localhost:5678/api/works/${imageId}`, {
+            method: "DELETE",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+            
+        })
+        .then(data => {
+            // Traiter la réponse de l'API
+            console.log(data);
+            const imgModalRemove = document.getElementById(`${imageId}`)
+            // const imgGalleryRemove = document.querySelector(`.gallery #${imageId}`);
+            const galleryContainer = document.querySelector('.gallery');
+
+            imgModalRemove.remove();
+            
+            const imgGalleryRemove = document.getElementById(imageId);
+            
+            if (imgGalleryRemove && imgGalleryRemove.parentNode === galleryContainer) {
+                galleryContainer.removeChild(imgGalleryRemove);
+                console.log("Élément supprimé de la galerie :", imgGalleryRemove);
+            } else {
+                console.log("Élément non trouvé dans la galerie avec l'ID :", imageId);
+            }
+            // window.location.href = "/FrontEnd/index.html";  
+            
+        })
+        .catch(error => {
+            console.error("Erreur lors de la requête DELETE:", error);
+            // Gérer les erreurs de la requête
+        });
+    });
+        
+}
+
+}

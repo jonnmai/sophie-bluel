@@ -134,6 +134,8 @@ for (const item of works) {
       img.setAttribute('src', item.imageUrl); 
       img.setAttribute('alt',item.title); 
       img.setAttribute('category', item.categoryId);
+      img.id = item.id;
+      figure.id = item.id;
       figcaption.textContent = item.title; 
 
       // Ajouter les éléments à la div avec la classe "gallery"
