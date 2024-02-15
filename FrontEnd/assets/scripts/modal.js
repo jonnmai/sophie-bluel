@@ -38,15 +38,19 @@ export function modalCreator() {
         
     <form id="modal-pic-form" style="display: block;">
         <div class="form">
-            <input type="file" name="file" id="file">
-            <label for="text">Titre</label>
-            <input type="text" name="text" id="text">
-            <label for="select">Catégorie</label>
-            <select name="category" id="category">
-            </select>
-            <div class="line"></div>
-            <button id="modal-pic" type="submit" disabled>Valider</button>
-            
+            <div class="upload">
+                <i class="fa-regular fa-image"></i>
+                <button class="button-file"> + Ajouter photo<input type="file" name="file" id="file"></button>
+                <img id="selected-image" src="" alt="Selected Image" style="display:none;">
+                <p class="ext">jpg, png : 4mo max</p>
+            </div>
+                <label for="text">Titre</label>
+                <input type="text" name="text" id="text">
+                <label for="select">Catégorie</label>
+                <select name="category" id="category">
+                </select>
+                <div class="line"></div>
+                <button id="modal-pic" type="submit" disabled>Valider</button>
         </div>
     </form>
 </div>`;
@@ -163,13 +167,33 @@ export async function addOption(categories) {
 }
 
 export function submitNewElement() {
+    const uploadBtn = document.querySelector(".button-file");
     const fileInput = document.getElementById("file");
+    const selectedImage = document.getElementById('selected-image');
     const textInput = document.getElementById("text");
     const categorySelect = document.getElementById("category");
 
     const modalPicForm = document.getElementById("modal-pic-form");
     const addPicBtn = document.getElementById("modal-pic");
     const submitForm = document.querySelector(".form");
+
+    uploadBtn.addEventListener('click', ()=> {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+    
+            reader.onload = function(e) {
+                selectedImage.src = e.target.result;
+                selectedImage.style.display = 'block';
+            };
+    
+            reader.readAsDataURL(fileInput.files[0]);
+            uploadBtn.style = "display: none";
+        }
+    });
 
     modalPicForm.addEventListener('change', checkFormFields); 
 
