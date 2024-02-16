@@ -9,7 +9,7 @@ import { modalCreator,
          openModal,
          addOption,
          submitNewElement,
-         deletePicture } from "./modal.js";
+         displayModalGallery} from "./modal.js";
 
 //Variables qui nous permettra de filtrer l'affichage des projets//
 const worksRequest = await fetch("http://localhost:5678/api/works");
@@ -24,7 +24,9 @@ filterChecked();
 
 verifyLogin();
 logoutFunction();
+
 modalCreator();
+displayModalGallery(works)
 addOption(categories);
 openModal();
 

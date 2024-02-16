@@ -489,11 +489,13 @@ input:disabled {
 	width: 210px;
 	text-align: center;
 	border-radius: 50px ;
+	line-height: 45px
 }
 
 #file {
 	display: none;
 }
+
 
 .ext {
 	font-family: 'Work Sans';
@@ -539,4 +541,12 @@ input:disabled {
 	background-color: #1D6154;
 	font-family: 'Syne';
 	color: #FFF;
+}
+
+.post-msg {
+	margin: 50px; 
+	color: green;
+	font-size: 18px;
+	font-weight: 700;
+	text-decoration: underline;
 }

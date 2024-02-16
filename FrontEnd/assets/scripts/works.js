@@ -102,8 +102,6 @@ export function logoutFunction() {
     }
 }
 
-
-
 export function filterChecked() {
     // Pour avoir le filtre choisi "Checked"
 const buttons = document.querySelectorAll(".filter");
@@ -118,7 +116,6 @@ buttons.forEach((button) => {
         button.classList.add('active');
     });
 });
-
 }
 
 export async function displayGallery(works) {

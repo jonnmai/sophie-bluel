@@ -1,10 +1,9 @@
-const worksRequest = await fetch("http://localhost:5678/api/works");
-const works = await worksRequest.json();
 
 
 //Toutes les variables que l'on utilises plusieurs fois: 
 const modal = document.getElementById("modal");
 const secondModal = document.getElementById("second-modal");
+
 
 //On stock le token et l'id récuperer grâce à l'API
 const token = window.localStorage.getItem("token");
@@ -40,7 +39,7 @@ export function modalCreator() {
         <div class="form">
             <div class="upload">
                 <i class="fa-regular fa-image"></i>
-                <button class="button-file"> + Ajouter photo<input type="file" name="file" id="file"></button>
+                <span class="button-file"> + Ajouter photo<input type="file" name="file" id="file"></span>
                 <img id="selected-image" src="" alt="Selected Image" style="display:none;">
                 <p class="ext">jpg, png : 4mo max</p>
             </div>
@@ -49,10 +48,14 @@ export function modalCreator() {
                 <label for="select">Catégorie</label>
                 <select name="category" id="category">
                 </select>
+                
                 <div class="line"></div>
                 <button id="modal-pic" type="submit" disabled>Valider</button>
         </div>
     </form>
+    
+                
+    </div>
 </div>`;
     
 
@@ -72,7 +75,6 @@ export function openModal() {
 
     openModal.addEventListener('click', ()=> {
         modal.showModal();
-        displayModalGallery(works);
         deletePicture();
     });
 
@@ -86,30 +88,31 @@ export function openModal() {
         console.log("test");
         secondModal.close();
         modal.showModal();
+        resetInput()
         // addPicBtn.disabled = false;
     });
 
     closeFirstModal.addEventListener('click', ()=> {
         modal.close();
-        clearModalGallery();
+        resetInput()
     });
 
     closeSecondModal.addEventListener('click', ()=> {
         secondModal.close();
-        clearModalGallery();
+        resetInput()
     });
 
     window.addEventListener('click', function(e) {
         if (e.target === modal || e.target === secondModal ) {
             modal.close();
             secondModal.close();
-            clearModalGallery();
+            resetInput()
         }
     });
 
 }
 
-function displayModalGallery(works) {
+export function displayModalGallery(works) {
     // On récupère toute la div "Gallery"
     const galleryDiv = document.querySelector('.modal-gallery');
 for (const item of works) {
@@ -140,17 +143,10 @@ for (const item of works) {
       trash.appendChild(trashIcon);
       figure.appendChild(trash);
   }
-
-}
-
-function clearModalGallery() {
-    const galleryDiv = document.querySelector('.modal-gallery');
-    galleryDiv.innerHTML = ''; // Supprimer le contenu existant
 }
 
 export async function addOption(categories) {
     const selector = document.getElementById("category");
-    
         // Ajouter une option vide comme première option
         const defaultOption = document.createElement("option");
         defaultOption.value = ""; // La valeur vide
@@ -175,22 +171,41 @@ export function submitNewElement() {
 
     const modalPicForm = document.getElementById("modal-pic-form");
     const addPicBtn = document.getElementById("modal-pic");
-    const submitForm = document.querySelector(".form");
 
     uploadBtn.addEventListener('click', ()=> {
         fileInput.click();
     });
 
-    fileInput.addEventListener('change', function() {
+    fileInput.addEventListener('change', ()=> {
         if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
+            const file = fileInput.files[0];
     
+            // Vérifier le type du fichier
+            const allowedTypes = ['image/jpeg', 'image/png'];
+            if (!allowedTypes.includes(file.type)) {
+                // Afficher un message d'erreur ou autre logique de gestion d'erreur
+                alert("Veuillez sélectionner une image au format JPEG ou PNG.");
+                fileInput.value = ''; // Réinitialiser la valeur de l'input file
+                selectedImage.style.display = 'none';
+                return;
+            }
+            // Vérifier la taille du fichier (4 Mo maximum)
+            const maxSize = 4 * 1024 * 1024; // 4 Mo en octets
+            if (file.size > maxSize) {
+                
+                alert("La taille de l'image ne doit pas dépasser 4 Mo.");
+                fileInput.value = ''; // Réinitialiser la valeur de l'input file
+                selectedImage.style.display = 'none';
+                return;
+            }
+            // Afficher l'image sélectionnée
+            const reader = new FileReader();
+            // Définit une fonction qui sera appelée lorsque la lecture du fichier sera terminée.
             reader.onload = function(e) {
                 selectedImage.src = e.target.result;
                 selectedImage.style.display = 'block';
             };
-    
-            reader.readAsDataURL(fileInput.files[0]);
+            reader.readAsDataURL(file);
             uploadBtn.style = "display: none";
         }
     });
@@ -208,9 +223,10 @@ export function submitNewElement() {
         addPicBtn.disabled = !areFieldsFilled;
     }
 
-    modalPicForm.addEventListener('submit', (event) => {
-        event.preventDefault(); // Empêcher la soumission du formulaire par défaut
+    modalPicForm.addEventListener('submit', (e) => {
+        e.preventDefault();
         console.log("Success");
+        
         const formData = new FormData();
     
         formData.append("image", fileInput.files[0]);
@@ -227,20 +243,34 @@ export function submitNewElement() {
         })
         .then(response => response.json())
         .then(data => {
-
+            
              // Traiter la réponse de l'API
              console.log(data);
              addPicToModalAndGallery(data);
              deletePicture();
-
-            // window.location.href = "/FrontEnd/index.html";  
-            
+             alert("Un travail a été ajouter à la galerie");
         })
         .catch(error => {
             console.error("Erreur lors de la requête POST:", error);
             // Gérer les erreurs de la requête
         });
     });
+    
+}
+
+function resetInput() {
+    const fileInput = document.getElementById("file");
+    const textInput = document.getElementById("text");
+    const categorySelect = document.getElementById("category");
+    const selectedImage = document.getElementById('selected-image');
+    const uploadBtn = document.querySelector(".button-file");
+
+    fileInput.value = '';
+    textInput.value = '';
+    categorySelect.value = '';
+    selectedImage.src = '';
+    selectedImage.style = "display: none"
+    uploadBtn.style = "display : block"
     
 }
 
@@ -255,7 +285,7 @@ function addPicToModalAndGallery(data) {
         imgGallery.src = data.imageUrl;
         imgGallery.id = data.id;
 
-        // Ajouter l'élément d'image à l'endroit souhaité dans votre DOM
+        // Ajouter l'élément d'image à l'endroit souhaité dans le DOM
         const modalGallery = document.querySelector('.modal-gallery');
         const gallery = document.querySelector('.gallery');
 
@@ -272,8 +302,6 @@ function addPicToModalAndGallery(data) {
         modalFigure.appendChild(imgModal);
         modalGallery.appendChild(modalFigure);
         
-
-        
         imgGallery.setAttribute('alt',data.title); 
         imgGallery.setAttribute('category', data.categoryId);
         figure.id = data.id;
@@ -282,17 +310,12 @@ function addPicToModalAndGallery(data) {
         figure.appendChild(figcaption);
         gallery.appendChild(figure);
 
-
-
         trash.setAttribute('id', data.id);
         trash.setAttribute('class', "trash");
         trashIcon.setAttribute('class', "fa-solid fa-trash-can");
 
         trash.appendChild(trashIcon);
         modalFigure.appendChild(trash);
-
-        
-
     } else {
         console.error("L'API n'a pas renvoyé l'URL de l'image attendue.");
     }
@@ -306,14 +329,11 @@ console.log(trashIcons)
 for (const trashIcon of trashIcons) {
     // Accédez à chaque élément "trash" ici
     console.log(trashIcon);
-    
-    // Vous pouvez également accéder à l'ID associé à chaque élément
     const imageId = trashIcon.id;
     console.log("ID de l'image associée :", imageId);
     
-    // Ajoutez un gestionnaire d'événements à chaque icône trashcan
     trashIcon.addEventListener('click', () => {
-        // Récupérez l'ID associé à cette icône
+
         console.log("Image ID à supprimer :", imageId);
 
         fetch(`http://localhost:5678/api/works/${imageId}`, {
@@ -327,7 +347,6 @@ for (const trashIcon of trashIcons) {
             // Traiter la réponse de l'API
             console.log(data);
             const imgModalRemove = document.getElementById(`${imageId}`)
-            // const imgGalleryRemove = document.querySelector(`.gallery #${imageId}`);
             const galleryContainer = document.querySelector('.gallery');
 
             imgModalRemove.remove();
@@ -340,7 +359,6 @@ for (const trashIcon of trashIcons) {
             } else {
                 console.log("Élément non trouvé dans la galerie avec l'ID :", imageId);
             }
-            // window.location.href = "/FrontEnd/index.html";  
             
         })
         .catch(error => {
